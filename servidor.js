@@ -16,7 +16,11 @@ let planos = [
     { nome: 'Premium', valor: 'R$49,99' }
 ];
 
-let usuarios = [{}]; // Array para armazenar os usuarios
+let usuarios = [
+    { nome: 'básico', valor: 'R$19,99' },
+    { nome: 'Medium', valor: 'R$29,99' },
+    { nome: 'Premium', valor: 'R$49,99' }
+]; // Array para armazenar os usuarios
 
 let assinaturas = [{}]; // Array para armazenar os assinaturas
 
@@ -29,7 +33,7 @@ let idAssinatura = 0;
 //--- ROTAS DOS PLANOS---
 
 // Rota para adicionar um novo plano
-app.post('/sub', (req, res) => {
+app.post('/sub/planos', (req, res) => {
     const novoPlano = req.body;
     novoPlano.id = idPlano++;
     planos.push(novoPlano);
@@ -42,13 +46,13 @@ app.get('/sub/planos', (req, res) => {
 });
 
 //Rota para retornar plano por ID
-app.get('/sub/:id', (req, res) => {
+app.get('/sub/planos/:id', (req, res) => {
     const id = req.params.id;
     res.json(buscarObjetoPorId(planos, id));
 });
 
 // Rota para atualizar um plano existente
-app.put('/sub/:id', (req, res) => {
+app.put('/sub/planos/:id', (req, res) => {
     const id = req.params.id;
     const novoPlano = req.body;
     novoPlano.id = id;
@@ -57,7 +61,7 @@ app.put('/sub/:id', (req, res) => {
 });
 
 // Rota para remover um plano existente
-app.delete('/sub/:id', (req, res) => {
+app.delete('/sub/planos/:id', (req, res) => {
     const id = req.params.id;
     planos.splice(buscarIndiceDoObjetoPorId(planos, id), 1);
     res.send('Plano removido com sucesso');
@@ -71,14 +75,15 @@ app.post('/sub/novaAssinatura', (req, res) => {
     res.send(assinarPlano(req.params.idPlano, req.params.idUsuario));
 });
 
-//Rota para retornar todos os planos ARRUMAR
+//ARRUMAR
+//Rota para retornar todos os planos
 app.get('/sub/assinaturas', (req, res) => {
     res.json(assinaturas);
 });
 
 // Rota para cancelamento de assinatura
-app.put('/sub/cancelaAssinatura', (req, res) => {
-    res.send(cancelarPlano(req.params.idUsuario));
+app.put('/sub/cancelaAssinatura/:id', (req, res) => {
+    res.send(cancelarPlano(req.params.id));
 });
 
 
