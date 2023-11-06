@@ -183,6 +183,7 @@ app.delete('/sub/usuarios/:id', (req, res) => {
     res.send('Usuarios removido com sucesso');
 });
 
+// Rota para gerar debito mensal
 app.get('/sub/debitoMensal/:id', (req, res) => {
     res.json(gerarDebitoMensal(req.params.id))
 })
