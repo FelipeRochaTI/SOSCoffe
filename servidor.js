@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 let assinaturas = [{}];
 let usuarios = [{}];
 
-
 const app = express();
 app.use(bodyParser.json());
 
@@ -32,22 +31,23 @@ app.get('/planos', (req, res) => {
 
 //Rota para retornar plano por ID
 app.get('/planos/:id', (req, res) => {
-    const idRES = req.params.id;
-    res.json(planos);
+    const id = req.params.id;
+    res.json(buscarObjetoPorId(planos, id));
 });
 
 // Rota para atualizar um plano existente
 app.put('/planos/:id', (req, res) => {
     const id = req.params.id;
     const novoPlano = req.body;
-    planos[id] = novoPlano;
+    novoPlano.id = id;
+    planos[buscarIndiceDoObjetoPorId(planos, id)] = novoPlano;
     res.send('Plano atualizado com sucesso');
 });
 
 // Rota para remover um plano existente
 app.delete('/planos/:id', (req, res) => {
     const id = req.params.id;
-    planos.splice(id, 1);
+    planos.splice(buscarIndiceDoObjetoPorId(planos, id), 1);
     res.send('Plano removido com sucesso');
 });
 
@@ -81,10 +81,22 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
 
 function buscarObjetoPorId(lista, id) {
     // Itera pela lista de objetos
-    for (const objeto of lista) {
-        if (objeto.id === id) {
+    for (let objeto of lista) {
+        if (objeto.id == id) {
             return objeto; // Retorna o objeto quando encontra o ID correspondente
         }
+    }
+    return null; // Retorna null se o objeto não for encontrado
+}
+
+function buscarIndiceDoObjetoPorId(lista, id) {
+    let count = 0;
+    // Itera pela lista de objetos
+    for (let objeto of lista) {
+        if (objeto.id == id) {
+            return count; // Retorna o objeto quando encontra o ID correspondente
+        }
+        count++
     }
     return null; // Retorna null se o objeto não for encontrado
 }
