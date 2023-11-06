@@ -86,7 +86,7 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
 function buscarObjetoPorId(lista, id) {
     // Itera pela lista de objetos
     for (let objeto of lista) {
-        if (objeto.id === id) {
+        if (objeto.id == id) {
             return objeto; // Retorna o objeto quando encontra o ID correspondente
         }
     }
