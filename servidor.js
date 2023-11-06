@@ -38,9 +38,9 @@ usuarios = [
 
 // Preenchendo Array com exemplos de Assinaturas
 assinaturas = [
-    { id: idAssinatura++, idPlano: 0, idUsuario: 0, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 },
-    { id: idAssinatura++, idPlano: 1, idUsuario: 1, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 },
-    { id: idAssinatura++, idPlano: 2, idUsuario: 2, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
+    { id: idAssinatura++, idPlano: 0, idUsuario: 0, assinatura: true, dataComeco: new Date(), diaVencimento: 5, dataCancelamento: -1 },
+    { id: idAssinatura++, idPlano: 1, idUsuario: 1, assinatura: true, dataComeco: new Date(), diaVencimento: 10, dataCancelamento: -1 },
+    { id: idAssinatura++, idPlano: 2, idUsuario: 2, assinatura: true, dataComeco: new Date(),  diaVencimento: 19, dataCancelamento: -1 }
 ];
 
 
@@ -183,10 +183,15 @@ app.delete('/sub/usuarios/:id', (req, res) => {
     res.send('Usuarios removido com sucesso');
 });
 
+
+// --- ROTA DE DEBITO ---
+
 // Rota para gerar debito mensal
 app.get('/sub/debitoMensal/:id', (req, res) => {
     res.json(gerarDebitoMensal(req.params.id))
 })
+
+
 // --- FUNÇÕES DE MANIPULAÇÃO ---
 
 function cancelarPlano(idUsuario) {
@@ -213,8 +218,8 @@ function assinarPlano(idPlano, idUsusario, diaVencimento) {
 }
 
 function gerarDebitoMensal(idAssinatura) {
-    let assinatura = buscarObjetoPorId(this.assinaturas, idAssinatura);
-    let plano = buscarObjetoPorId(this.planos, assinatura.idPlano);
+    let assinatura = buscarObjetoPorId(assinaturas, idAssinatura);
+    let plano = buscarObjetoPorId(planos, assinatura.idPlano);
     let dataAtual = new Date()
 
     const debito = {
