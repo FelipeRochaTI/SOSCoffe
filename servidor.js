@@ -54,13 +54,16 @@ app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
 
-function cancelarPlano(lista, idUsusario) {
+function cancelarPlano(usuarios, idUsusario) {
+    let plano = buscarObjetoPorId(this.assinaturas, idUsusario);
+    plano.assinatura = false;
+    plano.dataCancelamento = new Date();
 
-    console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
+    console.log(`O plano foi cancelado com sucesso em ${plano.dataCancelamento}.`);
 }
 
 function assinarPlano(idPlano, idUsusario) {
-    assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date() }
+    assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
 
     return `Você assinou o plano com sucesso.`;
 }
@@ -80,7 +83,7 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
 
 function buscarObjetoPorId(lista, id) {
     // Itera pela lista de objetos
-    for (const objeto of lista) {
+    for (let objeto of lista) {
         if (objeto.id === id) {
             return objeto; // Retorna o objeto quando encontra o ID correspondente
         }
