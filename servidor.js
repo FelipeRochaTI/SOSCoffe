@@ -36,6 +36,16 @@ app.get('/planos/:id', (req, res) => {
     res.json(planos);
 });
 
+// Rota para nova assinatura
+app.get('/sub/novaAssinatura', (req, res) => {
+    res.send(assinarPlano(req.params.idPlano, req.params.idUsuario));
+});
+
+// Rota para cancelamento de assinatura
+app.put('/sub/cancelaAssinatura', (req, res) => {
+    res.send(cancelarPlano(req.params.idUsuario));
+})
+
 // Rota para atualizar um plano existente
 app.put('/planos/:id', (req, res) => {
     const id = req.params.id;
@@ -56,7 +66,7 @@ app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
 
-function cancelarPlano(usuarios, idUsusario) {
+function cancelarPlano(idUsusario) {
     let plano = buscarObjetoPorId(this.assinaturas, idUsusario);
     plano.assinatura = false;
     plano.dataCancelamento = new Date();
@@ -65,7 +75,7 @@ function cancelarPlano(usuarios, idUsusario) {
 }
 
 function assinarPlano(idPlano, idUsusario) {
-    assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
+    this.assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
 
     return `Você assinou o plano com sucesso.`;
 }
