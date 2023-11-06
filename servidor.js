@@ -25,10 +25,11 @@ let idPlano = 0;
 let idUsuario = 0;
 let idAssinatura = 0;
 
-//--- ROTA DOS PLANOS---
+
+//--- ROTAS DOS PLANOS---
 
 // Rota para adicionar um novo plano
-app.post('/planos', (req, res) => {
+app.post('/sub', (req, res) => {
     const novoPlano = req.body;
     novoPlano.id = idPlano++;
     planos.push(novoPlano);
@@ -36,28 +37,18 @@ app.post('/planos', (req, res) => {
 });
 
 //Rota para retornar todos os planos
-app.get('/planos', (req, res) => {
+app.get('/sub/planos', (req, res) => {
     res.json(planos);
 });
 
 //Rota para retornar plano por ID
-app.get('/planos/:id', (req, res) => {
+app.get('/sub/:id', (req, res) => {
     const id = req.params.id;
     res.json(buscarObjetoPorId(planos, id));
 });
 
-// Rota para nova assinatura
-app.get('/sub/novaAssinatura', (req, res) => {
-    res.send(assinarPlano(req.params.idPlano, req.params.idUsuario));
-});
-
-// Rota para cancelamento de assinatura
-app.put('/sub/cancelaAssinatura', (req, res) => {
-    res.send(cancelarPlano(req.params.idUsuario));
-})
-
 // Rota para atualizar um plano existente
-app.put('/planos/:id', (req, res) => {
+app.put('/sub/:id', (req, res) => {
     const id = req.params.id;
     const novoPlano = req.body;
     novoPlano.id = id;
@@ -66,11 +57,33 @@ app.put('/planos/:id', (req, res) => {
 });
 
 // Rota para remover um plano existente
-app.delete('/planos/:id', (req, res) => {
+app.delete('/sub/:id', (req, res) => {
     const id = req.params.id;
     planos.splice(buscarIndiceDoObjetoPorId(planos, id), 1);
     res.send('Plano removido com sucesso');
 });
+
+
+// --- ROTAS DAS ASSINATURAS ---
+
+// Rota para nova assinatura
+app.post('/sub/novaAssinatura', (req, res) => {
+    res.send(assinarPlano(req.params.idPlano, req.params.idUsuario));
+});
+
+//Rota para retornar todos os planos ARRUMAR
+app.get('/sub/assinaturas', (req, res) => {
+    res.json(assinaturas);
+});
+
+// Rota para cancelamento de assinatura
+app.put('/sub/cancelaAssinatura', (req, res) => {
+    res.send(cancelarPlano(req.params.idUsuario));
+});
+
+
+// --- ROTAS DE USUÁRIOS ---
+
 
 // --- FUNÇÕES DE MANIPULAÇÃO ---
 
@@ -83,7 +96,7 @@ function cancelarPlano(idUsusario) {
 }
 
 function assinarPlano(idPlano, idUsusario) {
-    this.assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
+    this.assinaturas += { id: idAssinatura++, idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
 
     return `Você assinou o plano com sucesso.`;
 }
