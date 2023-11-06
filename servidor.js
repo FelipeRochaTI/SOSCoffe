@@ -32,8 +32,8 @@ planos = [
 // Preenchendo Array com exemplos de usuarios
 usuarios = [
     { id: idUsuario++, nome: 'fulano', email: 'fulano@esobreisso.com' },
-    { id: idUsuario++, nome: 'ciclano', valor: 'ciclano@esobreisso.com' },
-    { id: idUsuario++, nome: 'beutrano', valor: 'beutrano@esobreisso.com' }
+    { id: idUsuario++, nome: 'ciclano', email: 'ciclano@esobreisso.com' },
+    { id: idUsuario++, nome: 'beutrano', email: 'beutrano@esobreisso.com' }
 ];
 
 // Preenchendo Array com exemplos de Assinaturas
@@ -107,11 +107,81 @@ app.put('/sub/cancelaAssinatura/:id', (req, res) => {
 
 // Rota para reativar de assinatura
 app.put('/sub/reativaAssinatura/:id', (req, res) => {
-    res.send(cancelarPlano(req.params.id));
+    res.send(reativaPlano(req.params.id));
 });
 
 
 // --- ROTAS DE USUÁRIOS ---
+
+// Rota para adicionar um novo Usuario
+app.post('/sub/usuarios', (req, res) => {
+    const novoUsuario = req.body;
+    novoUsuario.id = idUsuario++;
+    usuarios.push(novoUsuario);
+    res.send('Usuario adicionado com sucesso');
+});
+
+//Rota para retornar todos os usuarios
+app.get('/sub/usuarios', (req, res) => {
+    res.json(usuarios);
+});
+
+//Rota para retornar plano por ID
+app.get('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    res.json(buscarObjetoPorId(usuarios, id));
+});
+
+// Rota para atualizar um plano existente
+app.put('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    const novoUsuarios = req.body;
+    novoUsuarios.id = id;
+    usuarios[buscarIndiceDoObjetoPorId(usuarios, id)] = novoUsuarios;
+    res.send('Usuarios atualizado com sucesso');
+});
+
+// Rota para remover um plano existente
+app.delete('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    usuarios.splice(buscarIndiceDoObjetoPorId(usuarios, id), 1);
+    res.send('Usuarios removido com sucesso');
+});
+
+// Rota para adicionar um novo Usuario
+app.post('/sub/usuarios', (req, res) => {
+    const novoUsuario = req.body;
+    novoUsuario.id = idUsuario++;
+    usuarios.push(novoUsuario);
+    res.send('Usuario adicionado com sucesso');
+});
+
+//Rota para retornar todos os usuarios
+app.get('/sub/usuarios', (req, res) => {
+    res.json(usuarios);
+});
+
+//Rota para retornar plano por ID
+app.get('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    res.json(buscarObjetoPorId(usuarios, id));
+});
+
+// Rota para atualizar um plano existente
+app.put('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    const novoUsuarios = req.body;
+    novoUsuarios.id = id;
+    usuarios[buscarIndiceDoObjetoPorId(usuarios, id)] = novoUsuarios;
+    res.send('Usuarios atualizado com sucesso');
+});
+
+// Rota para remover um plano existente
+app.delete('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    usuarios.splice(buscarIndiceDoObjetoPorId(usuarios, id), 1);
+    res.send('Usuarios removido com sucesso');
+});
 
 app.get('/sub/debitoMensal/:id', (req, res) => {
     res.json(gerarDebitoMensal(req.params.id))
@@ -130,8 +200,9 @@ function reativaPlano(idUsuario) {
     let index = buscarIndiceDoObjetoPorId(assinaturas, idUsuario);
     assinaturas[index].assinatura = true;
     assinaturas[index].dataCancelamento = -1;
+    assinaturas[index].dataComeco = new Date();
 
-    console.log(`O plano foi cancelado com sucesso em ${assinaturas[index].dataCancelamento}.`);
+    console.log(`O plano foi reativado com sucesso em ${assinaturas[index].dataComeco}.`);
 }
 
 function assinarPlano(idPlano, idUsusario, diaVencimento) {
