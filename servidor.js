@@ -42,3 +42,27 @@ app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
 
+function cancelarPlano(nomeDoPlano, dataCancelamento) {
+    console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
+}
+
+function assinarPlano(nomeDoPlano, tipoDeAssinatura) {
+    // Aqui, você pode adicionar código para armazenar informações da assinatura em um banco de dados.
+    // Por simplicidade, estamos apenas retornando uma mensagem de confirmação.
+
+    return `Você assinou o plano "${nomeDoPlano}" com sucesso com a opção de ${tipoDeAssinatura}.`;
+}
+
+function gerarDebitoMensal(valor, descricao, dataVencimento) {
+    // Aqui você pode adicionar código para armazenar ou processar o débito mensal, como registrá-lo em um sistema financeiro.
+
+    const debito = {
+        valor: valor,
+        descricao: descricao,
+        dataVencimento: dataVencimento,
+    };
+
+    // Exemplo de saída: retorna o objeto do débito gerado.
+    return debito;
+}
+
