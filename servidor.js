@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+let assinaturas = [{}];
+let usuarios = [{}];
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -7,7 +10,7 @@ app.use(bodyParser.json());
 let planos = [
     { nome: 'básico', valor: 'R$19,99' },
     { nome: 'Medium', valor: 'R$29,99' },
-    { nome: 'Premium', valor: 'R$49,99'}
+    { nome: 'Premium', valor: 'R$49,99' }
 ]; // Array para armazenar os planos
 
 let idPlano = 0;
@@ -53,15 +56,14 @@ app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
 
-function cancelarPlano(nomeDoPlano, dataCancelamento) {
+function cancelarPlano(lista, idUsusario) {
     console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
 }
 
-function assinarPlano(nomeDoPlano, tipoDeAssinatura) {
-    // Aqui, você pode adicionar código para armazenar informações da assinatura em um banco de dados.
-    // Por simplicidade, estamos apenas retornando uma mensagem de confirmação.
+function assinarPlano(idPlano, idUsusario) {
+    assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date() }
 
-    return `Você assinou o plano "${nomeDoPlano}" com sucesso com a opção de ${tipoDeAssinatura}.`;
+    return `Você assinou o plano com sucesso.`;
 }
 
 function gerarDebitoMensal(valor, descricao, dataVencimento) {
@@ -75,4 +77,14 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
 
     // Exemplo de saída: retorna o objeto do débito gerado.
     return debito;
+}
+
+function buscarObjetoPorId(lista, id) {
+    // Itera pela lista de objetos
+    for (const objeto of lista) {
+        if (objeto.id === id) {
+            return objeto; // Retorna o objeto quando encontra o ID correspondente
+        }
+    }
+    return null; // Retorna null se o objeto não for encontrado
 }
