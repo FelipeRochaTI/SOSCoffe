@@ -11,8 +11,6 @@ let planos = [
 
 ]; // Array para armazenar os planos
 
-let idContador = 0;
-
 // Rota para adicionar um novo plano
 app.post('/planos', (req, res) => {
     const novoPlano = req.body;
@@ -27,7 +25,7 @@ app.get('/planos', (req, res) => {
 
 //Rota para retornar plano por ID
 app.get('/planos/:id', (req, res) => {
-    const id = req.params.id;
+    const id = req.rapams.id;
     res.json(planos[id]);
 });
 
@@ -46,7 +44,7 @@ app.delete('/planos/:id', (req, res) => {
     res.send('Plano removido com sucesso');
 });
 
-const PORT = 3000; // Porta em que o servidor será executado
+const PORT = 8080; // Porta em que o servidor será executado
 app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
