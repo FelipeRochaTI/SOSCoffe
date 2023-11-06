@@ -11,14 +11,16 @@ let planos = [
     { nome: 'básico', valor: 'R$19,99' },
     { nome: 'Medium', valor: 'R$29,99' },
     { nome: 'Premium', valor: 'R$49,99' }
-
 ]; // Array para armazenar os planos
 
-let idContador = 0;
+let idPlano = 0;
+let idUsuario = 0;
+let idAssinatura = 0;
 
 // Rota para adicionar um novo plano
 app.post('/planos', (req, res) => {
     const novoPlano = req.body;
+    novoPlano.id = idPlano++;
     planos.push(novoPlano);
     res.send('Plano adicionado com sucesso');
 });
@@ -30,8 +32,8 @@ app.get('/planos', (req, res) => {
 
 //Rota para retornar plano por ID
 app.get('/planos/:id', (req, res) => {
-    const id = req.params.id;
-    res.json(planos[id]);
+    const idRES = req.params.id;
+    res.json(planos);
 });
 
 // Rota para atualizar um plano existente
@@ -55,7 +57,6 @@ app.listen(PORT, () => {
 });
 
 function cancelarPlano(lista, idUsusario) {
-
     console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
 }
 
