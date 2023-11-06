@@ -32,8 +32,8 @@ planos = [
 // Preenchendo Array com exemplos de usuarios
 usuarios = [
     { id: idUsuario++, nome: 'fulano', email: 'fulano@esobreisso.com' },
-    { id: idUsuario++, nome: 'ciclano', valor: 'ciclano@esobreisso.com' },
-    { id: idUsuario++, nome: 'beutrano', valor: 'beutrano@esobreisso.com' }
+    { id: idUsuario++, nome: 'ciclano', email: 'ciclano@esobreisso.com' },
+    { id: idUsuario++, nome: 'beutrano', email: 'beutrano@esobreisso.com' }
 ]; 
 
 // Preenchendo Array com exemplos de Assinaturas
@@ -113,7 +113,40 @@ app.put('/sub/reativaAssinatura/:id', (req, res) => {
 
 // --- ROTAS DE USUÁRIOS ---
 
+// Rota para adicionar um novo Usuario
+app.post('/sub/usuarios', (req, res) => {
+    const novoUsuario = req.body;
+    novoUsuario.id = idUsuario++;
+    usuarios.push(novoUsuario);
+    res.send('Usuario adicionado com sucesso');
+});
 
+//Rota para retornar todos os usuarios
+app.get('/sub/usuarios', (req, res) => {
+    res.json(usuarios);
+});
+
+//Rota para retornar plano por ID
+app.get('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    res.json(buscarObjetoPorId(usuarios, id));
+});
+
+// Rota para atualizar um plano existente
+app.put('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    const novoUsuarios = req.body;
+    novoUsuarios.id = id;
+    usuarios[buscarIndiceDoObjetoPorId(usuarios, id)] = novoUsuarios;
+    res.send('Usuarios atualizado com sucesso');
+});
+
+// Rota para remover um plano existente
+app.delete('/sub/usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    usuarios.splice(buscarIndiceDoObjetoPorId(usuarios, id), 1);
+    res.send('Usuarios removido com sucesso');
+});
 
 
 // --- FUNÇÕES DE MANIPULAÇÃO ---
