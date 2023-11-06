@@ -11,8 +11,6 @@ let planos = [
 
 ]; // Array para armazenar os planos
 
-let idContador = 0;
-
 // Rota para adicionar um novo plano
 app.post('/planos', (req, res) => {
     const novoPlano = req.body;
@@ -27,7 +25,7 @@ app.get('/planos', (req, res) => {
 
 //Rota para retornar plano por ID
 app.get('/planos/:id', (req, res) => {
-    const id = req.params.id;
+    const id = req.rapams.id;
     res.json(planos[id]);
 });
 
@@ -46,30 +44,7 @@ app.delete('/planos/:id', (req, res) => {
     res.send('Plano removido com sucesso');
 });
 
-const PORT = 3000; // Porta em que o servidor será executado
+const PORT = 8080; // Porta em que o servidor será executado
 app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
-
-function cancelarPlano(nomeDoPlano, dataCancelamento) {
-    console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
-}
-
-function assinarPlano(nomeDoPlano, tipoDeAssinatura) {
-    // Aqui, você pode adicionar código para armazenar informações da assinatura em um banco de dados.
-    // Por simplicidade, estamos apenas retornando uma mensagem de confirmação.
-
-    return `Você assinou o plano "${nomeDoPlano}" com sucesso com a opção de ${tipoDeAssinatura}.`;
-}
-
-function gerarDebitoMensal(valor, descricao, dataVencimento) {
-    // Aqui você pode adicionar código para armazenar ou processar o débito mensal, como registrá-lo em um sistema financeiro.
-
-    const debito = {
-        valor: valor,
-        descricao: descricao,
-        dataVencimento: dataVencimento,
-    };
-
-    // Exemplo de saída: retorna o objeto do débito gerado.
-    return debito;
-}
+});
