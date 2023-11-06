@@ -54,7 +54,8 @@ app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
 
-function cancelarPlano(nomeDoPlano, dataCancelamento) {
+function cancelarPlano(lista, idUsusario) {
+
     console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
 }
 
@@ -75,4 +76,14 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
 
     // Exemplo de saída: retorna o objeto do débito gerado.
     return debito;
+}
+
+function buscarObjetoPorId(lista, id) {
+    // Itera pela lista de objetos
+    for (const objeto of lista) {
+        if (objeto.id === id) {
+            return objeto; // Retorna o objeto quando encontra o ID correspondente
+        }
+    }
+    return null; // Retorna null se o objeto não for encontrado
 }
