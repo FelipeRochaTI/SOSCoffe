@@ -107,11 +107,13 @@ app.put('/sub/cancelaAssinatura/:id', (req, res) => {
 
 // Rota para reativar de assinatura
 app.put('/sub/reativaAssinatura/:id', (req, res) => {
-    res.send(cancelarPlano(req.params.id));
+    res.send(reativaPlano(req.params.id));
 });
 
 
 // --- ROTAS DE USUÁRIOS ---
+
+
 
 
 // --- FUNÇÕES DE MANIPULAÇÃO ---
@@ -128,8 +130,9 @@ function reativaPlano(idUsuario) {
     let index = buscarIndiceDoObjetoPorId(assinaturas, idUsuario);
     assinaturas[index].assinatura = true;
     assinaturas[index].dataCancelamento = -1;
+    assinaturas[index].dataComeco = new Date();
 
-    console.log(`O plano foi cancelado com sucesso em ${assinaturas[index].dataCancelamento}.`);
+    console.log(`O plano foi reativado com sucesso em ${assinaturas[index].dataComeco}.`);
 }
 
 function assinarPlano(idPlano, idUsusario) {
