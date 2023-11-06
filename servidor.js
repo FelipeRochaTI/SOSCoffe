@@ -9,25 +9,39 @@ app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
 });
 
-// Array para armazenar os planos (contendo exemplos sem id)
-let planos = [
-    { nome: 'básico', valor: 'R$19,99' },
-    { nome: 'Medium', valor: 'R$29,99' },
-    { nome: 'Premium', valor: 'R$49,99' }
-];
+// Armazenamento
+let planos = [{}];
+let usuarios = [{}];
+let assinaturas = [{}];
 
-let usuarios = [
-    { nome: 'básico', valor: 'R$19,99' },
-    { nome: 'Medium', valor: 'R$29,99' },
-    { nome: 'Premium', valor: 'R$49,99' }
-]; // Array para armazenar os usuarios
-
-let assinaturas = [{}]; // Array para armazenar os assinaturas
-
-//Contadores para id
+// Contadores para id
 let idPlano = 0;
 let idUsuario = 0;
 let idAssinatura = 0;
+
+
+// --- EXEMPLOS ---
+
+// Preenchendo array com exemplos de planos
+planos = [
+    { id: idPlano++, nome: 'básico', valor: 'R$19,99' },
+    { id: idPlano++, nome: 'Medium', valor: 'R$29,99'},
+    { id: idPlano++, nome: 'Premium', valor: 'R$49,99', }
+];
+
+// Preenchendo Array com exemplos de usuarios
+usuarios = [
+    { id: idUsuario++, nome: 'fulano', email: 'fulano@esobreisso.com' },
+    { id: idUsuario++, nome: 'ciclano', valor: 'ciclano@esobreisso.com' },
+    { id: idUsuario++, nome: 'beutrano', valor: 'beutrano@esobreisso.com' }
+]; 
+
+// Preenchendo Array com exemplos de Assinaturas
+assinaturas = [
+    { id: idAssinatura++, idPlano: 0, idUsuario: 0, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 },
+    { id: idAssinatura++, idPlano: 1, idUsuario: 1, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 },
+    { id: idAssinatura++, idPlano: 2, idUsuario: 2, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
+];
 
 
 //--- ROTAS DOS PLANOS---
@@ -72,17 +86,27 @@ app.delete('/sub/planos/:id', (req, res) => {
 
 // Rota para nova assinatura
 app.post('/sub/novaAssinatura', (req, res) => {
-    res.send(assinarPlano(req.params.idPlano, req.params.idUsuario));
+    res.send(assinarPlano(req.body.idPlano, req.body.idUsuario));
 });
 
-//ARRUMAR
-//Rota para retornar todos os planos
+//Rota para retornar todas as assinaturas
 app.get('/sub/assinaturas', (req, res) => {
     res.json(assinaturas);
 });
 
+//Rota para retornar assinatura por ID
+app.get('/sub/assinaturas/:id', (req, res) => {
+    const id = req.params.id;
+    res.json(buscarObjetoPorId(assinaturas, id));
+});
+
 // Rota para cancelamento de assinatura
 app.put('/sub/cancelaAssinatura/:id', (req, res) => {
+    res.send(cancelarPlano(req.params.id));
+});
+
+// Rota para reativar de assinatura
+app.put('/sub/reativaAssinatura/:id', (req, res) => {
     res.send(cancelarPlano(req.params.id));
 });
 
@@ -92,16 +116,24 @@ app.put('/sub/cancelaAssinatura/:id', (req, res) => {
 
 // --- FUNÇÕES DE MANIPULAÇÃO ---
 
-function cancelarPlano(idUsusario) {
-    let plano = buscarObjetoPorId(this.assinaturas, idUsusario);
-    plano.assinatura = false;
-    plano.dataCancelamento = new Date();
+function cancelarPlano(idUsuario) {
+    let index = buscarIndiceDoObjetoPorId(assinaturas, idUsuario);
+    assinaturas[index].assinatura = false;
+    assinaturas[index].dataCancelamento = new Date();
 
-    console.log(`O plano foi cancelado com sucesso em ${plano.dataCancelamento}.`);
+    console.log(`O plano foi cancelado com sucesso em ${assinaturas[index].dataCancelamento}.`);
+}
+
+function reativaPlano(idUsuario) {
+    let index = buscarIndiceDoObjetoPorId(assinaturas, idUsuario);
+    assinaturas[index].assinatura = true;
+    assinaturas[index].dataCancelamento = -1;
+
+    console.log(`O plano foi cancelado com sucesso em ${assinaturas[index].dataCancelamento}.`);
 }
 
 function assinarPlano(idPlano, idUsusario) {
-    this.assinaturas += { id: idAssinatura++, idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 }
+    assinaturas.push({ id: idAssinatura++, idPlano: idPlano, idUsuario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 });
 
     return `Você assinou o plano com sucesso.`;
 }
