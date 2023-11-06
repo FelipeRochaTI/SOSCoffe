@@ -1,21 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-let assinaturas = [{}];
-let usuarios = [{}];
-
 
 const app = express();
 app.use(bodyParser.json());
 
+const PORT = 3000; // Porta em que o servidor será executado
+app.listen(PORT, () => {
+    console.log(`Servidor em execução na porta ${PORT}`);
+});
+
+// Array para armazenar os planos (contendo exemplos sem id)
 let planos = [
     { nome: 'básico', valor: 'R$19,99' },
     { nome: 'Medium', valor: 'R$29,99' },
     { nome: 'Premium', valor: 'R$49,99' }
-]; // Array para armazenar os planos
+];
 
+let usuarios = [{}]; // Array para armazenar os usuarios
+
+let assinaturas = [{}]; // Array para armazenar os assinaturas
+
+//Contadores para id
 let idPlano = 0;
 let idUsuario = 0;
 let idAssinatura = 0;
+
+//--- ROTA DOS PLANOS---
 
 // Rota para adicionar um novo plano
 app.post('/planos', (req, res) => {
@@ -32,8 +42,8 @@ app.get('/planos', (req, res) => {
 
 //Rota para retornar plano por ID
 app.get('/planos/:id', (req, res) => {
-    const idRES = req.params.id;
-    res.json(planos);
+    const id = req.params.id;
+    res.json(buscarObjetoPorId(planos, id));
 });
 
 // Rota para nova assinatura
@@ -50,21 +60,19 @@ app.put('/sub/cancelaAssinatura', (req, res) => {
 app.put('/planos/:id', (req, res) => {
     const id = req.params.id;
     const novoPlano = req.body;
-    planos[id] = novoPlano;
+    novoPlano.id = id;
+    planos[buscarIndiceDoObjetoPorId(planos, id)] = novoPlano;
     res.send('Plano atualizado com sucesso');
 });
 
 // Rota para remover um plano existente
 app.delete('/planos/:id', (req, res) => {
     const id = req.params.id;
-    planos.splice(id, 1);
+    planos.splice(buscarIndiceDoObjetoPorId(planos, id), 1);
     res.send('Plano removido com sucesso');
 });
 
-const PORT = 3000; // Porta em que o servidor será executado
-app.listen(PORT, () => {
-    console.log(`Servidor em execução na porta ${PORT}`);
-});
+// --- FUNÇÕES DE MANIPULAÇÃO ---
 
 function cancelarPlano(idUsusario) {
     let plano = buscarObjetoPorId(this.assinaturas, idUsusario);
@@ -93,12 +101,26 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
     return debito;
 }
 
+// --- FUNÇÕES DE BUSCA ---
+
 function buscarObjetoPorId(lista, id) {
     // Itera pela lista de objetos
     for (let objeto of lista) {
         if (objeto.id == id) {
             return objeto; // Retorna o objeto quando encontra o ID correspondente
         }
+    }
+    return null; // Retorna null se o objeto não for encontrado
+}
+
+function buscarIndiceDoObjetoPorId(lista, id) {
+    let count = 0;
+    // Itera pela lista de objetos
+    for (let objeto of lista) {
+        if (objeto.id == id) {
+            return count; // Retorna o objeto quando encontra o ID correspondente
+        }
+        count++
     }
     return null; // Retorna null se o objeto não for encontrado
 }
