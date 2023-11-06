@@ -1,20 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-let assinaturas = [{}];
-let usuarios = [{}];
 
 const app = express();
 app.use(bodyParser.json());
 
+const PORT = 3000; // Porta em que o servidor será executado
+app.listen(PORT, () => {
+    console.log(`Servidor em execução na porta ${PORT}`);
+});
+
+// Array para armazenar os planos (contendo exemplos sem id)
 let planos = [
     { nome: 'básico', valor: 'R$19,99' },
     { nome: 'Medium', valor: 'R$29,99' },
     { nome: 'Premium', valor: 'R$49,99' }
-]; // Array para armazenar os planos
+];
 
+let usuarios = [{}]; // Array para armazenar os usuarios
+
+let assinaturas = [{}]; // Array para armazenar os assinaturas
+
+//Contadores para id
 let idPlano = 0;
 let idUsuario = 0;
 let idAssinatura = 0;
+
+//--- ROTA DOS PLANOS---
 
 // Rota para adicionar um novo plano
 app.post('/planos', (req, res) => {
@@ -51,10 +62,7 @@ app.delete('/planos/:id', (req, res) => {
     res.send('Plano removido com sucesso');
 });
 
-const PORT = 3000; // Porta em que o servidor será executado
-app.listen(PORT, () => {
-    console.log(`Servidor em execução na porta ${PORT}`);
-});
+// --- FUNÇÕES DE MANIPULAÇÃO ---
 
 function cancelarPlano(lista, idUsusario) {
     console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
@@ -78,6 +86,8 @@ function gerarDebitoMensal(valor, descricao, dataVencimento) {
     // Exemplo de saída: retorna o objeto do débito gerado.
     return debito;
 }
+
+// --- FUNÇÕES DE BUSCA ---
 
 function buscarObjetoPorId(lista, id) {
     // Itera pela lista de objetos
