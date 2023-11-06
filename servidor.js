@@ -24,9 +24,9 @@ let idAssinatura = 0;
 
 // Preenchendo array com exemplos de planos
 planos = [
-    { id: idPlano++, nome: 'básico', valor: 'R$19,99' },
-    { id: idPlano++, nome: 'Medium', valor: 'R$29,99'},
-    { id: idPlano++, nome: 'Premium', valor: 'R$49,99', }
+    { id: idPlano++, nome: 'básico', valor: 19.99 },
+    { id: idPlano++, nome: 'Medium', valor: 29.99 },
+    { id: idPlano++, nome: 'Premium', valor: 49.99 }
 ];
 
 // Preenchendo Array com exemplos de usuarios
@@ -34,7 +34,7 @@ usuarios = [
     { id: idUsuario++, nome: 'fulano', email: 'fulano@esobreisso.com' },
     { id: idUsuario++, nome: 'ciclano', valor: 'ciclano@esobreisso.com' },
     { id: idUsuario++, nome: 'beutrano', valor: 'beutrano@esobreisso.com' }
-]; 
+];
 
 // Preenchendo Array com exemplos de Assinaturas
 assinaturas = [
@@ -86,7 +86,7 @@ app.delete('/sub/planos/:id', (req, res) => {
 
 // Rota para nova assinatura
 app.post('/sub/novaAssinatura', (req, res) => {
-    res.send(assinarPlano(req.body.idPlano, req.body.idUsuario));
+    res.send(assinarPlano(req.body.idPlano, req.body.idUsuario, diaVencimento = 10));
 });
 
 //Rota para retornar todas as assinaturas
@@ -113,7 +113,9 @@ app.put('/sub/reativaAssinatura/:id', (req, res) => {
 
 // --- ROTAS DE USUÁRIOS ---
 
-
+app.get('/sub/debitoMensal/:id', (req, res) => {
+    res.json(gerarDebitoMensal(req.params.id))
+})
 // --- FUNÇÕES DE MANIPULAÇÃO ---
 
 function cancelarPlano(idUsuario) {
@@ -132,22 +134,23 @@ function reativaPlano(idUsuario) {
     console.log(`O plano foi cancelado com sucesso em ${assinaturas[index].dataCancelamento}.`);
 }
 
-function assinarPlano(idPlano, idUsusario) {
-    assinaturas.push({ id: idAssinatura++, idPlano: idPlano, idUsuario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1 });
+function assinarPlano(idPlano, idUsusario, diaVencimento) {
+    assinaturas.push({ id: idAssinatura++, idPlano: idPlano, idUsuario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1, diaVencimento: diaVencimento });
 
     return `Você assinou o plano com sucesso.`;
 }
 
-function gerarDebitoMensal(valor, descricao, dataVencimento) {
-    // Aqui você pode adicionar código para armazenar ou processar o débito mensal, como registrá-lo em um sistema financeiro.
+function gerarDebitoMensal(idAssinatura) {
+    let assinatura = buscarObjetoPorId(this.assinaturas, idAssinatura);
+    let plano = buscarObjetoPorId(this.planos, assinatura.idPlano);
+    let dataAtual = new Date()
 
     const debito = {
-        valor: valor,
-        descricao: descricao,
-        dataVencimento: dataVencimento,
+        valor: plano.valor,
+        descricao: plano.nome,
+        dataVencimento: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), assinatura.diaVencimento)
     };
 
-    // Exemplo de saída: retorna o objeto do débito gerado.
     return debito;
 }
 
