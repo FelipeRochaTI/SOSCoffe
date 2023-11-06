@@ -1,13 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+let assinaturas = [{}];
+let usuarios = [{}];
+
 
 const app = express();
 app.use(bodyParser.json());
 
 let planos = [
-    { id: 1, nome: 'básico', valor: 'R$19,99' },
-    { id: 2, nome: 'Medium', valor: 'R$29,99' },
-    { id: 3, nome: 'Premium', valor: 'R$49,99' }
+    { nome: 'básico', valor: 'R$19,99' },
+    { nome: 'Medium', valor: 'R$29,99' },
+    { nome: 'Premium', valor: 'R$49,99' }
 
 ]; // Array para armazenar os planos
 
@@ -49,16 +52,16 @@ app.delete('/planos/:id', (req, res) => {
 const PORT = 3000; // Porta em que o servidor será executado
 app.listen(PORT, () => {
     console.log(`Servidor em execução na porta ${PORT}`);
+});
 
 function cancelarPlano(nomeDoPlano, dataCancelamento) {
     console.log(`O plano "${nomeDoPlano}" foi cancelado com sucesso em ${dataCancelamento}.`);
 }
 
-function assinarPlano(nomeDoPlano, tipoDeAssinatura) {
-    // Aqui, você pode adicionar código para armazenar informações da assinatura em um banco de dados.
-    // Por simplicidade, estamos apenas retornando uma mensagem de confirmação.
+function assinarPlano(idPlano, idUsusario) {
+    assinaturas += { idPlano: idPlano, idUsusario: idUsusario, assinatura: true, dataComeco: new Date() }
 
-    return `Você assinou o plano "${nomeDoPlano}" com sucesso com a opção de ${tipoDeAssinatura}.`;
+    return `Você assinou o plano com sucesso.`;
 }
 
 function gerarDebitoMensal(valor, descricao, dataVencimento) {
