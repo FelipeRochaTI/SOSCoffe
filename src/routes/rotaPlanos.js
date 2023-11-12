@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+
+
+
 //retornar todos os planos
 router.get('/', (req, res) => {
   //res.json(planos);
