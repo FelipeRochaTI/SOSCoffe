@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Swagger Assinatura - OpenAPI 3.0
+  title: Swagger SOSCOFFE
   description: |-
     Essa é a documentação de um WebServer de assinaturas
   
@@ -55,24 +55,14 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                nome_plano:
-                  type: string
-                  format: varchar45
-                  example: platina
-                valor:
-                  type: number
-                  format: float
-                  example: 99.90
-              
-              
+              $ref: '#/components/schemas/PlanosSemID'
       responses:
         default:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/Planos'
   
   /planos/{id}:
     get:
@@ -89,6 +79,10 @@ paths:
           schema:
             type: integer
             format: int
+      content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Planos'
       responses:
         '200':
           description: successful operation
@@ -96,9 +90,122 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Planos'
-                
-
-
+    put:
+      tags:
+        - planos
+      summary: atualiza um plano
+      description: atualiza e retorna um plano
+      operationId: putPlanos
+      parameters:
+        - name: id
+          in: path
+          description: ID do plano que será retornado
+          required: true
+          schema:
+            type: integer
+            format: int
+      requestBody:
+        description: Criando um objeto de plano
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanosSemID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Planos'
+    delete:
+      tags:
+        - planos
+      summary: atualiza um plano
+      description: atualiza e retorna um plano
+      operationId: deletePlanos
+      parameters:
+        - name: id
+          in: path
+          description: ID do plano que será retornado
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        '200':
+          description: successful operation
+  
+  /assinatura/{id}:
+    get:
+      tags:
+        - planos
+      summary: busca um plano por id
+      description: busca e retorna um plano por id
+      operationId: getPlanosById
+      parameters:
+        - name: id
+          in: path
+          description: ID do plano que será retornado
+          required: true
+          schema:
+            type: integer
+            format: int
+      content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Planos'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Planos'
+    put:
+      tags:
+        - planos
+      summary: atualiza um plano
+      description: atualiza e retorna um plano
+      operationId: putPlanos
+      parameters:
+        - name: id
+          in: path
+          description: ID do plano que será retornado
+          required: true
+          schema:
+            type: integer
+            format: int
+      requestBody:
+        description: Criando um objeto de plano
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanosSemID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Planos'
+    delete:
+      tags:
+        - planos
+      summary: atualiza um plano
+      description: atualiza e retorna um plano
+      operationId: deletePlanos
+      parameters:
+        - name: id
+          in: path
+          description: ID do plano que será retornado
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        '200':
+          description: successful operation  
+  
   /pet:
     put:
       tags:
@@ -667,6 +774,17 @@ components:
           type: integer
           format: int
           example: 10
+        nome_plano:
+          type: string
+          format: varchar45
+          example: platina
+        valor:
+          type: number
+          format: float
+          example: 99.90
+    PlanosSemID:
+      type: object
+      properties:
         nome_plano:
           type: string
           format: varchar45
