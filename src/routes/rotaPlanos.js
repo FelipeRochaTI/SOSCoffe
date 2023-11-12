@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-
-
+const mysql = require('../mysql').pool;
 
 //retornar todos os planos
 router.get('/', (req, res) => {
@@ -13,17 +12,38 @@ router.get('/', (req, res) => {
 });
 
 //retornar plano por ID
-router.get('/planos/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   const id = req.params.id;
   res.json(buscarObjetoPorId(planos, id));
 });
 
 // cria um novo plano
-router.post('/planos', (req, res) => {
-  const novoPlano = req.body;
+router.post('/', (req, res) => {
+/*  const novoPlano = req.body;
   novoPlano.id = idPlano++;
   planos.push(novoPlano);
   res.send('Plano adicionado com sucesso');
+*/
+  mysql.getConnection((error, conn) => {
+    conn.query(
+      'INSERT INTO planos (nome_plano, valor) VALUES (?,?)',
+      [req.body.nome_plano, req.body.preco],
+      (error, resultado, field) => {
+        conn.release(); //fechando a conexão
+
+        if(error) {
+          return res.status(500).send ({
+            error: error,
+            response: null
+          });
+        }
+
+        res.status(201).send({
+          mensagem: 'Plano criado com sucesso'
+        });
+      }
+    )
+  });
 });
 
 // atualiza um plano existente
