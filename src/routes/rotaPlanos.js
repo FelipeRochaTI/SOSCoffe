@@ -6,8 +6,21 @@ const mysql = require('../mysql').pool;
 //retornar todos os planos
 router.get('/', (req, res) => {
   //res.json(planos);
-  res.status(200).send({
-    mensagem: 'retornando planos'
+  
+  mysql.getConnection((error, conn) => {
+    if (error) {
+      return res.status(500).send({error: error});
+    }
+
+    conn.query(
+      'SELECT * FROM planos;',
+      (error, resultado, field) => {
+        if (error) {
+          return res.status(500).send({error: error});
+        }
+        return res.status(200).send({response: resultado});
+      }
+    )
   });
 });
 
@@ -19,15 +32,16 @@ router.get('/:id', (req, res) => {
 
 // cria um novo plano
 router.post('/', (req, res) => {
-/*  const novoPlano = req.body;
-  novoPlano.id = idPlano++;
-  planos.push(novoPlano);
-  res.send('Plano adicionado com sucesso');
-*/
+  
   mysql.getConnection((error, conn) => {
+    
+    if (error) {
+      return res.status(500).send({error: error});
+    }
+
     conn.query(
       'INSERT INTO planos (nome_plano, valor) VALUES (?,?)',
-      [req.body.nome_plano, req.body.preco],
+      [req.body.nome_plano, req.body.valor],
       (error, resultado, field) => {
         conn.release(); //fechando a conexão
 
@@ -37,6 +51,8 @@ router.post('/', (req, res) => {
             response: null
           });
         }
+
+        console.log('Resultado da consulta:', resultado);
 
         res.status(201).send({
           mensagem: 'Plano criado com sucesso'
