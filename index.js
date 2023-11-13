@@ -1,3 +1,6 @@
+import Plano from './src/domain/plano.js'
+import Assinatura from './src/domain/assinatura.js'
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -40,7 +43,7 @@ usuarios = [
 assinaturas = [
     { id: idAssinatura++, idPlano: 0, idUsuario: 0, assinatura: true, dataComeco: new Date(), diaVencimento: 5, dataCancelamento: -1 },
     { id: idAssinatura++, idPlano: 1, idUsuario: 1, assinatura: true, dataComeco: new Date(), diaVencimento: 10, dataCancelamento: -1 },
-    { id: idAssinatura++, idPlano: 2, idUsuario: 2, assinatura: true, dataComeco: new Date(),  diaVencimento: 19, dataCancelamento: -1 }
+    { id: idAssinatura++, idPlano: 2, idUsuario: 2, assinatura: true, dataComeco: new Date(), diaVencimento: 19, dataCancelamento: -1 }
 ];
 
 
@@ -212,7 +215,7 @@ function reativaPlano(idUsuario) {
 }
 
 function assinarPlano(idPlano, idUsusario, diaVencimento) {
-    assinaturas.push({ id: idAssinatura++, idPlano: idPlano, idUsuario: idUsusario, assinatura: true, dataComeco: new Date(), dataCancelamento: -1, diaVencimento: diaVencimento });
+    assinaturas.push(new Assinatura(idPalno, idUsuario, true, dataVencimento, -1));
 
     return `Você assinou o plano com sucesso.`;
 }
