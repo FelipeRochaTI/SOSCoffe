@@ -16,15 +16,9 @@ tags:
   - name: planos
     description: tudo sobre planos
 
-  - name: assinatura
+  - name: assinaturas
     description: tudo sobre assinatura
 
-
-  - name: pet
-    description: Everything about your Pets
-    externalDocs:
-      description: Find out more
-      url: http://swagger.io
 paths:
   /planos:
     get:
@@ -39,7 +33,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Planos'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Planos'
         '500':
           description: Internal Server Error
     post:
@@ -57,10 +53,6 @@ paths:
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Planos'
         '500':
           description: Internal Server Error
   /planos/{id}:
@@ -108,12 +100,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PlanosSemID'
       responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Planos'
+        '202':
+          description: Accepted
         '500':
           description: Internal Server Error
     delete:
@@ -131,15 +119,15 @@ paths:
             type: integer
             format: int
       responses:
-        '200':
-          description: successful operation
+        '202':
+          description: Accepted
         '500':
           description: Internal Server Error
   
-  /assinatura:
+  /assinaturas:
     get:
       tags:
-        - assinatura
+        - assinaturas
       summary: Retorna todos as assinatura existentes
       description: Retorna todos as assinatura existentes
       operationId: getAssinatura
@@ -149,12 +137,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Assinatura'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assinatura'
         '500':
           description: Internal Server Error
     post:
       tags:
-        - assinatura
+        - assinaturas
       summary: Insere uma nova assinatura
       description: Insere uma nova assinatura
       operationId: postAssinatura
@@ -167,24 +157,20 @@ paths:
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Assinatura'
         '500':
           description: Internal Server Error
   
-  /assinatura/{id}:
+  /assinaturas/{id}:
     get:
       tags:
-        - assinatura
+        - assinaturas
       summary: busca uma assinatura por id
       description: busca e retorna um assinatura por id
       operationId: getAssinaturaById
       parameters:
         - name: id
           in: path
-          description: ID do assinatura que será retornada
+          description: ID da assinatura que será retornada
           required: true
           schema:
             type: integer
@@ -195,12 +181,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Planos'
+                $ref: '#/components/schemas/Assinatura'
         '500':
           description: Internal Server Error
     put:
       tags:
-        - assinatura
+        - assinaturas
       summary: atualiza uma assinatura
       description: atualiza e retorna uma assinatura
       operationId: putAssinatura
@@ -219,12 +205,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AssinaturaSemId'
       responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssinaturaSemId'
+        '202':
+          description: Accepted
         '500':
           description: Internal Server Error
 components:
