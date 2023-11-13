@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
     conn.query(
       'SELECT * FROM planos;',
       (error, resultado, field) => {
+        conn.release(); //fechando a conexão
         if (error) {
           return res.status(500).send({error: error});
         }
@@ -31,6 +32,7 @@ router.get('/:id', (req, res) => {
       'SELECT * FROM planos WHERE id_planos = ?;',
       [req.params.id],
       (error, resultado, field) => {
+        conn.release(); //fechando a conexão
         if (error) {
           return res.status(500).send({error: error});
         }
@@ -67,9 +69,9 @@ router.post('/', (req, res) => {
     )
   });
 });
-/*
+
 // atualiza um plano existente
-router.put('/planos/:id', (req, res) => {
+router.put('/:id', (req, res) => {
   mysql.getConnection((error, conn) => {
     if (error) {
       return res.status(500).send({
@@ -78,8 +80,8 @@ router.put('/planos/:id', (req, res) => {
       });
     }
     conn.query(
-      'UPDATE produtos SET nome = ?, ',
-      [req.body.nome_plano, req.body.valor],
+      'UPDATE planos SET nome_plano = ?, valor = ? WHERE id_planos = ?',
+      [req.body.nome_plano, req.body.valor, req.params.id],
       (error, resultado, field) => {
         conn.release(); //fechando a conexão
         if(error) {
@@ -88,8 +90,8 @@ router.put('/planos/:id', (req, res) => {
             response: null
           });
         }
-        res.status(201).send({
-          mensagem: 'Plano criado com sucesso'
+        res.status(202).send({
+          mensagem: 'Plano editado com sucesso',
         });
       }
     )
@@ -97,12 +99,25 @@ router.put('/planos/:id', (req, res) => {
 });
 
 // remove um plano existente
-router.delete('/planos/:id', (req, res) => {
-  const id = req.params.id;
-  planos.splice(buscarIndiceDoObjetoPorId(planos, id), 1);
-  res.send('Plano removido com sucesso');
+router.delete('/:id', (req, res) => {
+  mysql.getConnection((error, conn) => {
+    if (error) {
+      return res.status(500).send({error: error});
+    }
+    conn.query(
+      'DELETE FROM planos WHERE id_planos = ? ',
+      [req.params.id],
+      (error, resultado, field) => {
+        conn.release(); //fechando a conexão
+        if (error) {
+          return res.status(500).send({error: error});
+        }
+        return res.status(202).send({
+          mensagem: "plano deletado com sucesso"
+        });
+      }
+    )
+  });
 });
-
-*/
 
 module.exports = router;
