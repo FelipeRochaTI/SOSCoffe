@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Swagger Petstore - OpenAPI 3.0
+  title: Swagger SOSCOFFE - OpenAPI 3.0
   description: |-
-    Essa é a documentação de um WebServer de assinaturas
+    Essa é a documentação de um WebServer de assinaturas chamado SOSCOFFE
   
   termsOfService: http://swagger.io/terms/
   license:
