@@ -6,11 +6,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Rota dos Planos
-const rotaPlanos = require('./routes/rotaPlanos');
+const rotaPlanos = require('./controller/planosController');
 app.use('/planos', rotaPlanos);
 
 //Rota das Assinaturas
-const rotaAssinatura = require('./routes/rotaAssinatura');
+const rotaAssinatura = require('./controller/assinaturaController');
 app.use('/assinaturas', rotaAssinatura);
 
 
