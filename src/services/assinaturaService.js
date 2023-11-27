@@ -1,4 +1,7 @@
 const mysql = require('../mysql').pool;
+const PlanoService = require('../services/planoService');
+
+const planoService = new PlanoService();
 
 class AssinaturaService {
   getAllAssinaturas(callback) {
@@ -73,7 +76,6 @@ class AssinaturaService {
           if (error) {
             return callback(error, null);
           }
-
           return callback(null, resultado && resultado.length > 0 ? resultado[0] : null);
         }
       );
@@ -81,42 +83,51 @@ class AssinaturaService {
   }
 
   createAssinatura(assinaturaDTO, callback) {
-    this.getAssinaturaAtivaByUsuarioId(assinaturaDTO.id_usuario, (error, assinaturaAtiva) => {
+    planoService.getPlanoById(assinaturaDTO.fk_id_planos, (error, plano) => {
       if (error) {
         return callback(error, null);
       }
   
-      if (assinaturaAtiva) {
-        return callback({ message: 'Usuário já possui uma assinatura ativa' }, null);
+      if (!plano) {
+        return callback({ message: 'Plano não encontrado' }, null);
       }
-
-      mysql.getConnection((error, conn) => {
+      
+      this.getAssinaturaAtivaByUsuarioId(assinaturaDTO.id_usuario, (error, assinaturaAtiva) => {
         if (error) {
           return callback(error, null);
         }
-        conn.query(
-          'INSERT INTO assinatura (id_usuario, fk_id_planos, assinatura_ativa, data_inicio, data_fim) VALUES (?,?,?,?,?)',
-          [
-            assinaturaDTO.id_usuario,
-            assinaturaDTO.fk_id_planos,
-            assinaturaDTO.assinatura_ativa,
-            assinaturaDTO.data_inicio,
-            assinaturaDTO.data_fim,
-          ],
-          (error, resultado, field) => {
-            conn.release();
-            if (error) {
-              return callback(error, null);
-            }
-            return callback(null, resultado);
+    
+        if (assinaturaAtiva) {
+          return callback({ message: 'Usuário já possui uma assinatura ativa' }, null);
+        }
+  
+        mysql.getConnection((error, conn) => {
+          if (error) {
+            return callback(error, null);
           }
-        );
+          conn.query(
+            'INSERT INTO assinatura (id_usuario, fk_id_planos, assinatura_ativa, data_inicio, data_fim) VALUES (?,?,?,?,?)',
+            [
+              assinaturaDTO.id_usuario,
+              assinaturaDTO.fk_id_planos,
+              assinaturaDTO.assinatura_ativa,
+              assinaturaDTO.data_inicio,
+              assinaturaDTO.data_fim,
+            ],
+            (error, resultado, field) => {
+              conn.release();
+              if (error) {
+                return callback(error, null);
+              }
+              return callback(null, resultado);
+            }
+          );
+        });
       });
     });
-  }
+  };
 
   cancelaAssinatura(assinaturaDTO, callback) {
-     
     this.getAssinaturaAtivaByUsuarioId(assinaturaDTO.id_usuario, (error, assinaturaAtiva) => {
       
       if (error) {

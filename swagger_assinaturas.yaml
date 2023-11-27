@@ -77,6 +77,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Planos'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanoNotFound'
         '500':
           description: Internal Server Error
     put:
@@ -102,6 +108,16 @@ paths:
       responses:
         '202':
           description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/editSucessfull'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanoNotFound'
         '500':
           description: Internal Server Error
     delete:
@@ -121,6 +137,16 @@ paths:
       responses:
         '202':
           description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deletSucessfull'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanoNotFound'
         '500':
           description: Internal Server Error
   
@@ -157,6 +183,22 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssinaturaSucessfull'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioJaAssinou'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanoNotFound'
         '500':
           description: Internal Server Error
   
@@ -182,6 +224,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Assinatura'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioNotFound'
         '500':
           description: Internal Server Error
     put:
@@ -198,15 +246,79 @@ paths:
           schema:
             type: integer
             format: int
-      requestBody:
-        description: corpo com modificações da assinatura
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AssinaturaSemId'
       responses:
         '202':
           description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssinaturaDesativada'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioSemAssinatura'
+        '500':
+          description: Internal Server Error
+  /assinaturas/usuario/{id}:
+    get:
+      tags:
+        - assinaturas
+      summary: busca e retorna as assinaturas por id do usuario
+      description: busca e retorna as assinaturas por id do usuario
+      operationId: getAssinaturaByIdUsuario
+      parameters:
+        - name: id
+          in: path
+          description: ID da usuario 
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assinatura'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssinaturaUsuarioNotFound'
+        '500':
+          description: Internal Server Error
+  /assinaturas/usuario/ativa/{id}:
+    get:
+      tags:
+        - assinaturas
+      summary: busca e retorna as assinaturas ativa por id do usuario
+      description: busca e retorna as assinatura ativa por id do usuario
+      operationId: getAssinaturaAtivaByIdUsuario
+      parameters:
+        - name: id
+          in: path
+          description: ID da usuario 
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assinatura'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssinaturaUsuarioNotFound'
         '500':
           description: Internal Server Error
 components:
@@ -237,6 +349,27 @@ components:
           type: number
           format: float
           example: 99.90
+    PlanoNotFound:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Plano não encontrado
+    editSucessfull:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Plano editado com sucesso
+    deletSucessfull:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Plano deletado com sucesso
     
     Assinatura:
       type: object
@@ -265,7 +398,6 @@ components:
           type: string
           format: date
           example: 2023-12-01
-    
     AssinaturaSemId:
       type: object
       properties:
@@ -289,3 +421,52 @@ components:
           type: string
           format: date
           example: 2023-12-01
+    AssinaturaSucessfull:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Assinatura criada com sucesso
+    AssinaturaDesativada:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Assinatura desativada com sucesso
+    assinaturaNotFound:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: assinatura não encontrada
+    UsuarioJaAssinou:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Usuário já possui uma assinatura ativa
+    UsuarioSemAssinatura:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Usuário não possui uma assinatura ativa
+    UsuarioNotFound:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Usuario não encontrado
+    AssinaturaUsuarioNotFound:
+      type: object
+      properties:
+        mensagem: 
+          type: string
+          format: string
+          example: Nenhuma assinatura ativa encontrada para esse usuário
