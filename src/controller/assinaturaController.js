@@ -74,6 +74,8 @@ router.post('/', (req, res) => {
     if (error) {
       if (error.message === 'Usuário já possui uma assinatura ativa') {
         return res.status(400).send({ mensagem: 'Usuário já possui uma assinatura ativa' });
+      } else if (error.message === 'Plano não encontrado') {
+        return res.status(400).send({ mensagem: 'Plano não encontrado'});
       }
       return res.status(500).send({ error: error, response: null });
     }
