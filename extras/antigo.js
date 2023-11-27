@@ -1,5 +1,5 @@
-import Plano from './src/domain/plano.js'
-import Assinatura from './src/domain/assinatura.js'
+import Plano from './src/domain/plano.js.js'
+import Assinatura from './src/domain/assinatura.js.js'
 
 const express = require('express');
 const bodyParser = require('body-parser');
